@@ -1,1 +1,217 @@
-<h1>Surya Narayanan</h1>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiet Reflections</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #000;
+            color: #fff;
+            font-family: "IBM Plex Sans", sans-serif;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            width: 80vw;
+        }
+
+        p {
+            font-size: 2rem;
+            line-height: 1.8;
+            text-align: center;
+            font-weight: 300;
+            font-style: italic;
+            letter-spacing: 0.02em;
+
+            visibility: hidden;
+        }
+
+        .word {
+            display: inline-block;
+            margin-right: 0.35em;
+
+            opacity: 0;
+            filter: blur(5px);
+            transform: translateY(12px);
+        }
+
+        .word.animate-in {
+            animation: fadeWord 1.15s cubic-bezier(.22, .61, .36, 1) forwards;
+        }
+
+        .word.animate-out {
+            /* "both" instead of "forwards" is the fix: it makes the word hold
+               the fadeWordOut "from" state (fully visible) during its
+               animation-delay, instead of falling back to the base .word
+               rule (opacity: 0) and popping back in when the delay ends. */
+            animation: fadeWordOut 1.15s cubic-bezier(.22, .61, .36, 1) both;
+        }
+
+        @keyframes fadeWord {
+            from {
+                opacity: 0;
+                filter: blur(5px);
+                transform: translateY(12px);
+            }
+
+            to {
+                opacity: 1;
+                filter: blur(0);
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeWordOut {
+            from {
+                opacity: 1;
+                filter: blur(0);
+                transform: translateY(0);
+            }
+
+            to {
+                opacity: 0;
+                filter: blur(5px);
+                transform: translateY(12px);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <p id="text"></p>
+    </div>
+    <script>
+        const paragraphs = [
+            `Every moment leaves a mark, even when no one is watching. We build ourselves through countless ordinary choices, quiet acts of courage, and the willingness to keep moving forward. Time remembers what we often forget: the smallest step, taken with purpose, can quietly change the direction of an entire life forever.`,
+            `No one shall be subjected to arbitrary arrest, detention or exile. Everyone is entitled in full equality to a fair and public hearing by an independent and impartial tribunal. No one shall be subjected to arbitrary interference with privacy, family, home, or correspondence, nor to attacks upon honour and reputation protected by law.`,
+            `The stars have never rushed across the sky, yet every sunrise arrives precisely when it should. Nature succeeds through patience rather than haste, reminding us that lasting achievements often grow from consistency, quiet determination, and countless unseen moments that gradually become extraordinary over time.`,
+            `History often celebrates the loudest victories, yet the strongest foundations are built in silence. A thoughtful decision, an honest conversation, or a single act of kindness may never receive applause, but each leaves behind a legacy stronger than recognition alone could ever provide.`,
+            `Knowledge grows much like a forest. One idea becomes another, every question plants a seed, and every answer opens a path toward countless more discoveries. Those willing to remain curious rarely stop learning, because understanding is never a destination but a lifelong journey forward.`,
+            `The ocean appears calm from afar, yet beneath its surface entire worlds exist beyond ordinary sight. Human lives are much the same. Every person carries untold stories, hidden struggles, forgotten dreams, and silent victories that deserve understanding long before they are ever judged.`,
+            `Every invention began as an impossible thought inside someone's imagination. Progress has always belonged to those willing to ask unusual questions, challenge accepted limits, and continue building despite uncertainty. Innovation rarely appears overnight; it grows patiently through persistence, curiosity, and relentless refinement.`,
+            `There comes a moment when fear quietly disguises itself as comfort, encouraging us to remain exactly where we are. Growth begins only after recognizing that familiar surroundings may protect certainty but rarely create possibility. Every meaningful journey starts with one uncertain step forward.`,
+            `The measure of a person is seldom revealed during moments of success. It becomes visible during failure, disappointment, and uncertainty, when integrity remains even without recognition. Character is formed through decisions nobody applauds, witnessed only by conscience, patience, and the quiet passage of time.`,
+            `Across every generation, ideas outlive monuments, compassion outlasts power, and truth survives louder voices. Civilizations advance not merely through technology or wealth, but through people who choose fairness, wisdom, and responsibility even when easier paths stand directly before them.`,
+            `The future is not something that simply arrives; it is something shaped by every choice made today. Small actions, repeated with dedication, create outcomes that once seemed impossible. The people who transform the world are often those who quietly believed change was possible before anyone else could see it.`,
+            `A single candle can challenge the darkness around it, not because it removes the entire night, but because it proves that light can exist. Hope works in the same way. Even the smallest expression of kindness, courage, or compassion can influence lives beyond what we may ever know.`,
+            `Time carries away many things: possessions, achievements, and moments we once believed would last forever. Yet the impressions we leave upon others remain in ways we cannot measure. A gentle word, a helping hand, or a moment of understanding can become someone's reason to continue moving forward.`,
+            `The universe is filled with mysteries waiting beyond the limits of human understanding. Every discovery begins with curiosity and every breakthrough begins with someone refusing to accept that something cannot be known. The desire to explore is one of humanity's oldest and most powerful forces.`,
+            `Silence is not always emptiness. Sometimes silence contains reflection, wisdom, and the answers that cannot be found through constant noise. In quiet moments, people often discover their deepest thoughts, understand their true intentions, and find clarity hidden beneath the distractions of everyday life.`,
+            `Mountains are not conquered by a single movement, but by thousands of careful steps taken with determination. Life follows the same pattern. Great achievements are rarely created through sudden miracles; they emerge from patience, discipline, resilience, and the courage to continue despite obstacles.`,
+            `The greatest conversations are not always remembered because of the words spoken, but because of the feelings they created. Being heard, understood, and valued is a universal human desire. Sometimes the simplest moments of connection become the memories that remain with us for years.`,
+            `Dreams are fragile at first, existing only as thoughts and possibilities. They become reality when paired with effort, discipline, and belief. Every accomplishment that appears impossible from a distance was once only an idea waiting for someone brave enough to pursue it.`,
+            `Humanity has always moved forward through cooperation. Great achievements are rarely the result of one person alone; they are built through shared knowledge, collective effort, and the willingness to help one another. The future becomes brighter whenever people choose unity over division.`,
+            `The road ahead will not always be clear, and uncertainty will often accompany every meaningful decision. Yet uncertainty is not a sign to stop; it is an invitation to discover. The unknown holds not only challenges, but also opportunities waiting for those willing to step forward.`,
+            `The smallest moments often carry the deepest meaning. A smile offered during a difficult day, a hand extended during struggle, or a word of encouragement can create ripples that continue long after the moment has passed. Kindness is powerful because its effects travel further than we can see.`,
+            `We are shaped not only by what happens to us, but by how we respond to what happens. Challenges may test our strength, but they also reveal our ability to adapt, learn, and become something greater than we were before.`,
+            `The world is constantly changing, yet some values remain timeless: honesty, compassion, curiosity, and courage. These principles guide humanity through uncertainty and remind us that progress is not measured only by what we create, but also by who we become.`,
+            `A person may spend years searching for extraordinary experiences while overlooking the beauty hidden within ordinary moments. Life's most meaningful memories are often created quietly, through simple interactions, familiar places, and the people who make everyday existence feel valuable.`,
+            `The horizon always appears distant until the journey begins. Every explorer, creator, and dreamer once stood before uncertainty without knowing what awaited them. Progress belongs to those who accept the unknown, embrace learning, and continue walking even when the destination remains invisible.`,
+            `No achievement is built without patience. Behind every masterpiece, discovery, and success lies countless hours of preparation, failure, adjustment, and persistence. What appears effortless from the outside is often the result of dedication hidden away from public view.`,
+            `The mind is one of humanity's greatest landscapes, capable of imagining worlds that have never existed and solving problems that once seemed impossible. Every invention, every story, and every discovery begins as a thought waiting to become reality.`,
+            `Peace is not merely the absence of conflict; it is the presence of understanding, respect, and cooperation. A peaceful world is created through countless individual choices to listen, forgive, and recognize the shared humanity connecting every person.`,
+            `The greatest journeys are not always measured by distance traveled. Sometimes they are measured by lessons learned, perspectives changed, and the person we become along the way. Growth often happens quietly, through experiences that slowly transform how we see ourselves and the world.`,
+            `At the end of every chapter comes the beginning of another. Life continuously offers opportunities to learn, rebuild, and improve. The past may influence our path, but it does not have to determine our destination. Every new moment carries the possibility of change.`
+        ];
+
+        const DISPLAY_DURATION = 45000;
+        const BLACK_SCREEN_DELAY = 1000;
+        const WORD_STAGGER = 150;
+        const WORD_ANIMATION_DURATION = 1150;
+
+        const paragraph = document.getElementById("text");
+        let currentWords = [];
+        let cycleTimers = [];
+
+        function getRandomQuote() {
+            return paragraphs[Math.floor(Math.random() * paragraphs.length)] || "";
+        }
+
+        function clearAllTimers() {
+            cycleTimers.forEach(clearTimeout);
+            cycleTimers = [];
+        }
+
+        function addTimer(fn, delay) {
+            const id = setTimeout(fn, delay);
+            cycleTimers.push(id);
+            return id;
+        }
+
+        function showQuote() {
+            clearAllTimers();
+            paragraph.innerHTML = "";
+            paragraph.style.visibility = "visible";
+
+            const text = getRandomQuote();
+            const words = text.split(/\s+/);
+
+            currentWords = [];
+
+            words.forEach((word, index) => {
+                const span = document.createElement("span");
+                span.className = "word animate-in";
+                span.textContent = word;
+                span.style.animationDelay = `${index * WORD_STAGGER}ms`;
+                paragraph.appendChild(span);
+                currentWords.push(span);
+            });
+
+            const entranceDuration = (words.length - 1) * WORD_STAGGER + WORD_ANIMATION_DURATION;
+
+            addTimer(() => {
+                hideQuote();
+            }, entranceDuration + DISPLAY_DURATION);
+        }
+
+        function hideQuote() {
+            currentWords.forEach((span, index) => {
+                span.classList.remove("animate-in");
+                span.style.animationDelay = `${index * WORD_STAGGER}ms`;
+                span.classList.add("animate-out");
+            });
+
+            const exitDuration =
+                (currentWords.length - 1) * WORD_STAGGER + WORD_ANIMATION_DURATION;
+
+            addTimer(() => {
+                paragraph.innerHTML = "";
+                paragraph.style.visibility = "hidden";
+                addTimer(() => {
+                    showQuote();
+                }, BLACK_SCREEN_DELAY);
+            }, exitDuration);
+        }
+
+        function startCycle() {
+            addTimer(() => {
+                showQuote();
+            }, BLACK_SCREEN_DELAY);
+        }
+
+        window.addEventListener("load", () => {
+            startCycle();
+        });
+    </script>
+</body>
+
+</html>
